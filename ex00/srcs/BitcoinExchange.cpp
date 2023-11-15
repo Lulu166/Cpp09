@@ -6,7 +6,7 @@
 /*   By: humbert <humbert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 15:17:14 by humbert           #+#    #+#             */
-/*   Updated: 2023/11/15 00:34:04 by humbert          ###   ########.fr       */
+/*   Updated: 2023/11/15 12:46:47 by humbert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,17 @@ void    time_date_str(const struct tm &time, std::string &date_str) {
     date_str = os.str();
 }
 
-bool    valid_date_str(const std::string &cmp, struct tm &cmp_tm) {
+bool    valid_date_str(const std::string &date_str, struct tm &ref_date) {
     std::ostringstream  os;
     std::string         valid_date;
-    time_t              time = mktime(&cmp_tm);
+    time_t              time = mktime(&ref_date);
     struct tm           *tmp_time;
 
     tmp_time = std::localtime(&time);
     time_date_str(*tmp_time, valid_date);
-    if (cmp != valid_date)
+    if (date_str != valid_date)
         return (false);
-    cmp_tm = *tmp_time;
+    ref_date = *tmp_time;
     return (true);
 }
 
@@ -92,6 +92,7 @@ int BitcoinExchange::parse_rate(const std::string &path) {
         date_str = line.substr(0, pos);
         amount_str = line.substr(pos + 1, line.length() - pos);
 
+        // Initialiser structure de temps avec date et strptime pour convertir la date de chaîne en struct tm
         std::memset(&date, 0, sizeof(date));
         if (strptime(date_str.c_str(), "%Y-%m-%d", &date) == NULL
             || !valid_date_str(date_str, date))
@@ -99,6 +100,7 @@ int BitcoinExchange::parse_rate(const std::string &path) {
                 std::cerr << "Error: Invalid date" << date_str << std::endl;
                 continue ;
         }
+        // Convertir structure temps en time_t et Convertir chaîne de taux en float
         time = mktime(&date);
         try {
             ex_rate = std::stof(amount_str);
@@ -107,6 +109,7 @@ int BitcoinExchange::parse_rate(const std::string &path) {
             std::cerr << "Error: Failed to convert exchange rate to float" << std::endl;
             continue ;
         }
+        // Stocker taux dans le conteneur
         _exchange_rates[time] = ex_rate;
     }
     csv_file.close();
@@ -118,12 +121,16 @@ bool    BitcoinExchange::find_rate(struct tm &date, float &rate_found) const {
     time_t  q_time;
     time_t  time;
 
+    // Obtenir première date supérieure ou égale à q_time
     q_time = mktime(&date);
     it = _exchange_rates.lower_bound(q_time);
     time = it->first;
-
+    
+    // Si date exacte pas trouvée, revenir date précédente
     if (time != q_time && it != _exchange_rates.begin())
         time = (--it)->first;
+    
+    // Mettre à jour structure temps avec date trouvée
     date = *std::localtime(&time);
     rate_found = it->second;
     return (true);
@@ -143,10 +150,14 @@ bool    BitcoinExchange::get_value(const std::string &query,
     value = "";
     ex_rate = 0;
     total_value = 0;
+
+    // Extraction de la date initiale depuis la requête
     pos = query.find_first_of(' ');
     if (pos == query.npos)
         pos = query.length();
     init_date = query.substr(0, pos);
+    
+    // Conversion de la date initiale en struct tm
     if (strptime(init_date.c_str(), "%Y-%m-%d", &date_tm) == NULL
         || !valid_date_str(init_date, date_tm))
     {
@@ -154,8 +165,10 @@ bool    BitcoinExchange::get_value(const std::string &query,
         return (false);
     }
 
+    // Extraction de la partie de la requête après la date
     pos = query.find_first_not_of(" |", pos);
     amount_str = query.substr(pos);
+    // Conversion chaîne du montant en un nombre à virgule flottante
     try {
         amount = std::stof(amount_str);
     }
