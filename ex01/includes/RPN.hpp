@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: humbert <humbert@student.42.fr>            +#+  +:+       +#+        */
+/*   By: luhumber <luhumber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 15:24:37 by humbert           #+#    #+#             */
-/*   Updated: 2023/11/15 15:34:47 by humbert          ###   ########.fr       */
+/*   Updated: 2023/11/22 10:27:13 by luhumber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stack>
 # include <iostream>
 # include <string>
+# include <cstdlib>
 
 class RPN {
     private:

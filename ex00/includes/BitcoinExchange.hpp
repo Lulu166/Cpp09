@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: humbert <humbert@student.42.fr>            +#+  +:+       +#+        */
+/*   By: luhumber <luhumber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 15:17:06 by humbert           #+#    #+#             */
-/*   Updated: 2023/11/15 00:33:52 by humbert          ###   ########.fr       */
+/*   Updated: 2023/11/22 10:41:00 by luhumber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sstream>
 # include <string>
 # include <cstring>
+# include <cstdlib>
 # include <iomanip>
 
 # define CSV_PATH "data.csv"

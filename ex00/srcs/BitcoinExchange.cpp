@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: humbert <humbert@student.42.fr>            +#+  +:+       +#+        */
+/*   By: luhumber <luhumber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 15:17:14 by humbert           #+#    #+#             */
-/*   Updated: 2023/11/15 12:46:47 by humbert          ###   ########.fr       */
+/*   Updated: 2023/11/22 12:27:25 by luhumber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,15 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange &copy) {
 }
 
 void    time_date_str(const struct tm &time, std::string &date_str) {
-    std::ostringstream  os;
+    char                *os;
+    char                buffer[11];
     std::string         valid_date;
 
-    os << std::put_time(&time, "%Y-%m-%d");
-    date_str = os.str();
+    if (strftime(buffer, sizeof(buffer), "%Y-%m-%d", &time) != 0)
+        os = buffer;
+    else
+        std::cerr << "Error formatting date" << std::endl;
+    date_str = os;
 }
 
 bool    valid_date_str(const std::string &date_str, struct tm &ref_date) {
@@ -79,7 +83,7 @@ int BitcoinExchange::parse_rate(const std::string &path) {
     time_t          time;
     float           ex_rate;
 
-    csv_file.open(path, std::ios::in);
+    csv_file.open(path.c_str(), std::ios::in);
     if (!csv_file.is_open())
         return (-1);
     if (!std::getline(csv_file, line, '\n').good()) {
@@ -103,7 +107,8 @@ int BitcoinExchange::parse_rate(const std::string &path) {
         // Convertir structure temps en time_t et Convertir chaîne de taux en float
         time = mktime(&date);
         try {
-            ex_rate = std::stof(amount_str);
+            char *end;
+            ex_rate = strtof(amount_str.c_str(), &end);
         }
         catch (std::exception &e) {
             std::cerr << "Error: Failed to convert exchange rate to float" << std::endl;
@@ -170,7 +175,8 @@ bool    BitcoinExchange::get_value(const std::string &query,
     amount_str = query.substr(pos);
     // Conversion chaîne du montant en un nombre à virgule flottante
     try {
-        amount = std::stof(amount_str);
+        char *end;
+        amount = strtof(amount_str.c_str(), &end);
     }
     catch (std::exception &e) {
         std::cerr << "Error: Failed to convert exchange rate to float" << std::endl;
