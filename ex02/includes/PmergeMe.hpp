@@ -13,12 +13,12 @@
 # include <iterator>
 # include <algorithm>
 
-void                checkArg(std::string arg);
+void                checkArg(const std::string& arg);
 int                 getTime(struct timeval startTime);
 std::vector<int>    generateJacobsthalSequence(int n);
-std::vector<int>	Sort(char **args);
+std::vector<int>	TestSort(char **args);
 
 #include "PmergeMe.tpp"
-#include "utils.tpp"
+//#include "utils.tpp"
 
 #endif
