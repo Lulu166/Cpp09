@@ -1,37 +1,30 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: humbert <humbert@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/11/13 15:22:16 by humbert           #+#    #+#              #
-#    Updated: 2023/11/13 15:27:21 by humbert          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME			=	PmergeMe
 
 SRC_DIR		=	./srcs/
 OBJ_DIR		=	obj/
 
-INCS_DIR	=	includes
+INCS_DIR	=	includes/
+			
 MAIN_INC	= -I $(INCS_DIR)
-INCS		=	$(shell find $(INCS_DIR) -type f -name "*.hpp")
+INC			=	$(addprefix $(INCS_DIR), $(LIST_INC))
 
 SRC			=	main.cpp \
 				PmergeMe.cpp
+				
+LIST_INC	=	PmergeMe.hpp \
+				PmergeMe.tpp \
+				utils.tpp
 				
 OBJ			=	$(addprefix $(OBJ_DIR), $(SRC:.cpp=.o))
 
 CC				=	c++
 CFLAGS			=	-Wall -Wextra -Werror -std=c++98
 
-$(OBJ_DIR)%.o:	$(SRC_DIR)%.cpp
+$(OBJ_DIR)%.o:	$(SRC_DIR)%.cpp $(INC)
 		@mkdir -p $(OBJ_DIR)
-		$(CC) ${CFLAGS}  $(MAIN_INC) -o $@ -c $<
+		$(CC) ${CFLAGS} $(MAIN_INC) -o $@ -c $<
 
-$(NAME)		:	$(OBJ) $(INCS)
+$(NAME)		:	$(OBJ) $(INC)
 		$(CC) $(CFLAGS) $(OBJ) $(MAIN_INC) -o $(NAME)
 					
 all			:	$(NAME)
