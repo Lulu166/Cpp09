@@ -34,15 +34,15 @@ std::vector<int>	generateJacobsthalSequence(int	n)
 	int 				prev = 1;
 	int 				next = 1;
 	int 				i;
-	std::vector<int>	v;
+	std::vector<int>	container;
 
-	v.push_back(1);
+	container.push_back(1);
 	while (next < n)
 	{
 		i = next;
 		while (i > prev)
 		{
-			v.push_back(i);
+			container.push_back(i);
 			i--;
 		}
 		prev = next;
@@ -51,8 +51,8 @@ std::vector<int>	generateJacobsthalSequence(int	n)
 	i = n;
 	while (i > prev)
 	{
-		v.push_back(i);
+		container.push_back(i);
 		i--;
 	}
-	return (v);
+	return (container);
 }
