@@ -29,19 +29,30 @@ int getTime(struct timeval startTime)
     return (time);
 }
 
-std::vector<int> generateJacobsthalSequence(int n)
+std::vector<int>	generateJacobsthalSequence(int	n)
 {
-    std::vector<int> vec;
+	int 				prev = 1;
+	int 				next = 1;
+	int 				i;
+	std::vector<int>	v;
 
-    // Génère suite jusqu'à n
-    for (int i = 1, prev = 0, next = 1; next < n; ++i)
-    {
-        vec.push_back(prev + 2 * next);
-
-        int temp = next;
-        next = prev + 2 * next;
-        prev = temp;
-    }
-
-    return (vec);
+	v.push_back(1);
+	while (next < n)
+	{
+		i = next;
+		while (i > prev)
+		{
+			v.push_back(i);
+			i--;
+		}
+		prev = next;
+		next += 2 * i;
+	}
+	i = n;
+	while (i > prev)
+	{
+		v.push_back(i);
+		i--;
+	}
+	return (v);
 }

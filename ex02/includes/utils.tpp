@@ -47,7 +47,7 @@ void    isSort(T& container)
     while (i < static_cast<int>(container.size()))
     {
         if (container[i] < container[i - 1]) {
-            std::cout << "Sort Error" << std::endl;
+            std::cout << "Sort Error ici" << std::endl;
             throw std::exception();
         }
         i++;
@@ -66,7 +66,7 @@ T   fillContainerPairs(char **args)
         if (args[++i])
         {
             checkArg(args[i]);
-            if (std::atoi(args[1]) > std::atoi(args[i - 1]))
+            if (std::atoi(args[i]) > std::atoi(args[i - 1]))
                 container.push_back(std::make_pair(std::atoi(args[i]), std::atoi(args[i - 1])));
             else
                 container.push_back(std::make_pair(std::atoi(args[i - 1]), std::atoi(args[i])));
